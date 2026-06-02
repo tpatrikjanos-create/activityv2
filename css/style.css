@@ -534,27 +534,31 @@ input:focus { border-color: var(--accent); }
 
 /* ===== 5 SZAVAS VÁLASZTÓ ===== */
 .five-cards-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
   width: 100%;
-  max-width: 560px;
+  max-width: 900px;
+  padding: 0 8px;
 }
 
 .pick-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 8px;
   background: var(--card-bg);
   border: 2px solid var(--card-border);
   border-radius: var(--radius-sm);
-  padding: 14px 18px;
+  padding: 14px 8px 12px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, transform 0.1s;
-  text-align: left;
+  text-align: center;
   width: 100%;
+  min-height: 140px;
 }
-.pick-card:active { transform: scale(0.98); }
+.pick-card:active { transform: scale(0.97); }
 .pick-card.selected {
   border-color: var(--accent);
   background: rgba(245,166,35,0.1);
@@ -562,71 +566,90 @@ input:focus { border-color: var(--accent); }
 
 .pick-card-points {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 36px;
+  font-size: 42px;
   line-height: 1;
-  min-width: 42px;
-  text-align: center;
   color: var(--text-muted);
   transition: color 0.15s;
 }
 .pick-card.selected .pick-card-points { color: var(--accent); }
 
 .pick-card-points-star {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
-  text-align: center;
-  margin-top: 1px;
   letter-spacing: 1px;
+  margin-top: -4px;
 }
 .pick-card.selected .pick-card-points-star { color: var(--accent); }
 
 .pick-card-divider {
-  width: 1px;
-  height: 40px;
+  width: 80%;
+  height: 1px;
   background: var(--card-border);
   flex-shrink: 0;
 }
 
-.pick-card-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.pick-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
 
 .pick-card-word {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
+  font-size: 22px;
   letter-spacing: 1px;
   color: var(--text);
-  line-height: 1;
+  line-height: 1.1;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .pick-card-mode {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 11px;
+  justify-content: center;
+  gap: 4px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--text-muted);
+  line-height: 1.2;
+  text-align: center;
 }
-.pick-card-mode i { font-size: 13px; }
+.pick-card-mode i { font-size: 12px; flex-shrink: 0; }
 .pick-card.selected .pick-card-mode { color: var(--accent); }
 
 .pick-card-check {
-  font-size: 22px;
+  font-size: 20px;
   color: var(--accent);
   opacity: 0;
   transition: opacity 0.15s;
-  flex-shrink: 0;
 }
 .pick-card.selected .pick-card-check { opacity: 1; }
 
 .five-cards-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  gap: 16px;
   width: 100%;
-  max-width: 560px;
+  max-width: 900px;
   margin-top: 4px;
+  padding: 0 8px;
+}
+.five-cards-actions .btn-giant {
+  flex: 1;
+  max-width: 340px;
+  padding: 20px 24px;
+  font-size: 28px;
+}
+.five-cards-actions .btn-secondary {
+  flex-shrink: 0;
 }
 
 .btn-giant[disabled] {
