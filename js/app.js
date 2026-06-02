@@ -34,36 +34,54 @@ const Session = {
 
 /* ===== AI PROMPT: 5 SZAVAS GENERÁLÁS ===== */
 function buildFiveCardPrompt(category, used) {
-  const usedStr = used.length > 0 ? `\nMÁR HASZNÁLT szavak (TILOS megismételni): ${used.join(', ')}` : '';
-  const modeList = '"Mutasd meg!", "Rajzold le!", "Magyarázd el!", "Írd körül!"';
+  const usedStr = used.length > 0 ? '\nMAR HASZNALT szavak (TILOS megismetelni): ' + used.join(', ') : '';
 
   let categoryNote = '';
-  if (category.id === 'tizennyolcPlus') categoryNote = 'A kategória felnőtt, vulgáris, szexuálisan explicit tartalom – legyenek trágár, obszcén szavak is.';
-  else if (category.id === 'ceges') categoryNote = 'A kategória irodai, üzleti témájú.';
-  else if (category.id === 'gyerek') categoryNote = 'A kategória 6-12 éves gyerekeknek szól, egyszerű, barátságos szavak.';
-  else categoryNote = `A kategória: "${category.name}".`;
+  if (category.id === 'tizennyolcPlus') categoryNote = 'Kategoria: felnott 18+ tartalom, lehet vulgaris, szexualisan explicit.';
+  else if (category.id === 'ceges') categoryNote = 'Kategoria: irodai, uzleti temak.';
+  else if (category.id === 'gyerek') categoryNote = 'Kategoria: 6-12 eves gyerekeknek, egyszeru, baratsagos szavak.';
+  else categoryNote = 'Kategoria: ' + category.name + '.';
 
-  return `Te egy Activity társasjáték feladványgenerátora vagy.
-${categoryNote}
+  const rubric = `ELOADASMÓDOK:
+- "Mutasd meg!" = pantomim, csak testbeszeeddel
+- "Rajzold le!" = csak rajzzal
+- "Magyarazd el!" = szoban korulirva
+- "Ird korul!" = egyetlen koruliro mondattal
 
-Generálj PONTOSAN 5 különböző magyar szót vagy rövid kifejezést (max 3 szó), és mindegyikhez rendelj hozzá:
-1. Egy előadásmódot a következők közül: ${modeList}
-2. Egy nehézségi pontszámot 1-től 5-ig (1=könnyű, 5=nagyon nehéz), azt értékelve, hogy az adott előadásmóddal mennyire nehéz a szót kitaláltatni.
+NEHEZSEGI PONTSAM - a szo+mod EGYUTT hatarozza meg, mennyire konnyu KITALALNI:
 
-Fontos: az 5 szó között legyen 1 db 1 pontos, 1 db 2 pontos, 1 db 3 pontos, 1 db 4 pontos és 1 db 5 pontos – minden pontérték pontosan egyszer szerepeljen!${usedStr}
+"Mutasd meg!" peldak:
+1 pt: alszik, fut, eszik (egyszeru mozgas)
+2 pt: gitarozik, biciklizik, foz (felismerheto mozgas)
+3 pt: feltekeny, meglepett, almos (erzelemkifejezés)
+4 pt: demokracia, igazsagossag (elvont fogalom)
+5 pt: orokkévalósag, véletlenszerűség (szinte megmutogathatatlan)
 
-Válaszolj KIZÁRÓLAG valid JSON tömbként, így:
-[
-  {"word":"szó","mode":"Mutasd meg!","points":1},
-  {"word":"szó","mode":"Rajzold le!","points":2},
-  {"word":"szó","mode":"Magyarázd el!","points":3},
-  {"word":"szó","mode":"Írd körül!","points":4},
-  {"word":"szó","mode":"Mutasd meg!","points":5}
-]
-Semmi más szöveg, csak a JSON!`;
+"Rajzold le!" peldak:
+1 pt: haz, alma, kutya (egyszeru targy)
+2 pt: bicikli, helikopter (osszettebb targy)
+3 pt: hangulat, szel (nehezen abrazolhato)
+4 pt: szabadsag, baratsag (elvont fogalom)
+5 pt: ironia, valoszinuseg (szinte lerajzolhatatlan)
+
+"Magyarazd el!" peldak:
+1 pt: kenyer, kutya, iskola (hétköznapi)
+2 pt: kirandulas, unnep (osszettebb)
+3 pt: demokracia, gravitacio (elvont, de magyarazhato)
+4 pt: szinergia, benchmark (szakszó/elvont)
+5 pt: nihilizmus, transzcendencia (szinte megmagyarazhatatlan)
+
+"Ird korul!" peldak:
+1 pt: narancs, kutya (egy mondattal azonnal kitalalható)
+2 pt: bicikli, konyvtar (par jellemzővel)
+3 pt: alom, szivarvany (tobb jellemzo kell)
+4 pt: szabadsag, humor (neheaen egyertelmüsíthető)
+5 pt: orom, sors (szinte leirhatatlan)`;
+
+  return `Te egy Activity tarsasjatek feladvanygeneratora vagy. ${categoryNote}\n\nGeneralj PONTOSAN 5 kulonbozo magyar szot/kifejezest (max 3 szo), mindegyikhez eloadasmodot es nehezsegi pontszamot.\n\n${rubric}\n\nSZABALYOK:\n- Minden pontérték (1,2,3,4,5) PONTOSAN EGYSZER szerepeljen!\n- Gondold at alaposan a szo+eloadasmod parost mielott pontszamot adsz!\n- Az eredeti magyar szavakat hasznald a valaszban (nem az atirt verziokat)!${usedStr}\n\nValaszolj KIZAROLAG valid JSON tombkent:\n[\n  {"word":"szo","mode":"Mutasd meg!","points":1},\n  {"word":"szo","mode":"Rajzold le!","points":2},\n  {"word":"szo","mode":"Magyarazd el!","points":3},\n  {"word":"szo","mode":"Ird korul!","points":4},\n  {"word":"szo","mode":"Mutasd meg!","points":5}\n]`;
 }
 
-/* ===== AI GENERÁLÁS ===== */
+
 async function generateFiveWithAI(category) {
   const used = Session.getUsed(category.id);
   const prompt = buildFiveCardPrompt(category, used);
